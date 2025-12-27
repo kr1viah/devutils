@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "kr1v.utils.client.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+  ],
+  "plugin": "kr1v.utils.client.MixinPluginClient",
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "overwrites": {
+    "requireAnnotations": true
+  }
+}
