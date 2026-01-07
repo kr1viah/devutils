@@ -1,15 +1,28 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "kr1v.utils.client.mixin",
+  "package": "kr1v.utils.mixin",
   "compatibilityLevel": "JAVA_21",
   "client": [
+    "ChatHudMixin",
+    "accessor.CreateWorldScreenAccessor",
+    "actionBar.InGameHudMixin",
+    "fastMainMenu.MouseMixin",
+    "fastMainMenu.SplashOverlayMixin",
+    "fastMainMenu.TitleScreenMixin",
+    "testButton.TitleScreenMixin"
   ],
-  "plugin": "kr1v.utils.client.MixinPluginClient",
   "injectors": {
     "defaultRequire": 1
   },
   "overwrites": {
     "requireAnnotations": true
+  },
+  "mixins": [
+    "accessor.Matrix4fStackAccessor",
+    "accessor.ScreenAccessor"
+  ],
+  "mixinextras": {
+    "minVersion": "0.5.0"
   }
 }

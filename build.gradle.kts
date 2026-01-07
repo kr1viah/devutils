@@ -70,12 +70,20 @@ loom {
 }
 
 
-repositories {}
+repositories {
+    mavenCentral()
+    maven { url = uri("https://jitpack.io") }
+    maven { url = uri("https://maven.nucleoid.xyz/") }
+}
 
 dependencies {
     minecraft("com.mojang:minecraft:${project.property("minecraft_version")}")
     mappings("net.fabricmc:yarn:${project.property("yarn_mappings")}:v2")
     modImplementation("net.fabricmc:fabric-loader:${project.property("loader_version")}")
+
+    modImplementation("com.github.sakura-ryoko:malilib:${project.property("malilib_version")}")
+    modImplementation("com.github.kr1viah.malilib-api:${project.property("malilib_api_version")}")
+    annotationProcessor("com.github.kr1viah.malilib-api:${project.property("malilib_api_version")}")
 }
 
 tasks.processResources {

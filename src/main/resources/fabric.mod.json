@@ -10,6 +10,9 @@
   "icon": "assets/utils/icon.png",
   "environment": "*",
   "entrypoints": {
+    "client": [
+      "kr1v.utils.UtilsClient"
+    ]
   },
   "mixins": [
     "utils.mixins.json",
