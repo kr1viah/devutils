@@ -11,13 +11,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(TitleScreen.class)
 public class TitleScreenMixin {
-    @Shadow
-    private boolean doBackgroundFade;
+	@Shadow
+	private boolean doBackgroundFade;
 
-    @Inject(method = "<init>(ZLnet/minecraft/client/gui/LogoDrawer;)V", at = @At("RETURN"))
-    private void doNotBackgroundFade(boolean doBackgroundFade, LogoDrawer logoDrawer, CallbackInfo ci) {
-        if (Misc.FAST_MAIN_MENU.getBooleanValue()) {
-            this.doBackgroundFade = false;
-        }
-    }
+	@Inject(method = "<init>(ZLnet/minecraft/client/gui/LogoDrawer;)V", at = @At("RETURN"))
+	private void doNotBackgroundFade(boolean doBackgroundFade, LogoDrawer logoDrawer, CallbackInfo ci) {
+		if (Misc.FAST_MAIN_MENU.getBooleanValue()) {
+			this.doBackgroundFade = false;
+		}
+	}
 }

@@ -6,7 +6,7 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 
 @Mixin(Matrix4fStack.class)
 public interface Matrix4fStackAccessor {
-    @Accessor
-    int getCurr();
+	@Accessor
+	int getCurr();
 }
 

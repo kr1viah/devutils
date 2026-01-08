@@ -7,5 +7,6 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 
 @Mixin(Screen.class)
 public interface ScreenAccessor {
-    @Accessor void setClient(MinecraftClient client);
+	@Accessor
+	void setClient(MinecraftClient client);
 }

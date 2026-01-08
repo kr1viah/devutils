@@ -25,68 +25,68 @@ import java.util.List;
 
 @Mixin(InGameHud.class)
 public class InGameHudMixin {
-    @Unique
-    List<ActionBarMessage> actionBarMessages = new ArrayList<>();
+	@Unique
+	List<ActionBarMessage> actionBarMessages = new ArrayList<>();
 
-    @Inject(method = "tick()V", at = @At("HEAD"))
-    private void decrementRemaining(CallbackInfo ci) {
-        ActionBarMessage toRemove = null;
-        for (ActionBarMessage actionBarMessage : actionBarMessages) {
-            actionBarMessage.timeRemaining--;
-            if (actionBarMessage.timeRemaining < 0) toRemove = actionBarMessage;
-        }
-        actionBarMessages.remove(toRemove);
-    }
+	@Inject(method = "tick()V", at = @At("HEAD"))
+	private void decrementRemaining(CallbackInfo ci) {
+		ActionBarMessage toRemove = null;
+		for (ActionBarMessage actionBarMessage : actionBarMessages) {
+			actionBarMessage.timeRemaining--;
+			if (actionBarMessage.timeRemaining < 0) toRemove = actionBarMessage;
+		}
+		actionBarMessages.remove(toRemove);
+	}
 
-    @WrapMethod(method = "setOverlayMessage")
-    private void redirectOverlayMessage(Text text, boolean tinted, Operation<Void> original) {
-        if (!Misc.MULTIPLE_ACTION_BAR.getBooleanValue()) {
-            original.call(text, tinted);
-        } else {
-            ActionBarMessage newMessage = new ActionBarMessage(text, tinted, 60);
-            if (!actionBarMessages.contains(newMessage)) {
-                if (Misc.NEW_ON_TOP.getBooleanValue()) {
-                    actionBarMessages.addFirst(newMessage);
-                } else {
-                    actionBarMessages.add(newMessage);
-                }
-            }
-        }
-    }
+	@WrapMethod(method = "setOverlayMessage")
+	private void redirectOverlayMessage(Text text, boolean tinted, Operation<Void> original) {
+		if (!Misc.MULTIPLE_ACTION_BAR.getBooleanValue()) {
+			original.call(text, tinted);
+		} else {
+			ActionBarMessage newMessage = new ActionBarMessage(text, tinted, 60);
+			if (!actionBarMessages.contains(newMessage)) {
+				if (Misc.NEW_ON_TOP.getBooleanValue()) {
+					actionBarMessages.addFirst(newMessage);
+				} else {
+					actionBarMessages.add(newMessage);
+				}
+			}
+		}
+	}
 
-    @Inject(method = "renderOverlayMessage", at = @At("HEAD"))
-    private void renderClientOverlay(DrawContext context, RenderTickCounter tickCounter, CallbackInfo ci) {
-        if (actionBarMessages.isEmpty()) {
-           return;
-        }
-        TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
-        Profilers.get().push("multipleOverlayMessage");
-        int count = 0;
-        for (ActionBarMessage actionBarMessage : actionBarMessages.reversed()) {
-            if (actionBarMessage.timeRemaining > 0) {
-                float f = actionBarMessage.timeRemaining - tickCounter.getTickProgress(false);
-                int alpha = (int) ((f * 255.0F) / 20.0F);
-                if (alpha > 255) {
-                    alpha = 255;
-                }
+	@Inject(method = "renderOverlayMessage", at = @At("HEAD"))
+	private void renderClientOverlay(DrawContext context, RenderTickCounter tickCounter, CallbackInfo ci) {
+		if (actionBarMessages.isEmpty()) {
+			return;
+		}
+		TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
+		Profilers.get().push("multipleOverlayMessage");
+		int count = 0;
+		for (ActionBarMessage actionBarMessage : actionBarMessages.reversed()) {
+			if (actionBarMessage.timeRemaining > 0) {
+				float f = actionBarMessage.timeRemaining - tickCounter.getTickProgress(false);
+				int alpha = (int) ((f * 255.0F) / 20.0F);
+				if (alpha > 255) {
+					alpha = 255;
+				}
 
-                if (alpha > 8) {
-                    context.getMatrices().push();
-                    context.getMatrices().translate((float)(context.getScaledWindowWidth() / 2), (float)(context.getScaledWindowHeight() - 68) - 9 * count, 0.0F);
-                    int j;
-                    if (actionBarMessage.isTinted()) {
-                        j = MathHelper.hsvToArgb(f / 50.0F, 0.7F, 0.6F, alpha);
-                    } else {
-                        j = ColorHelper.withAlpha(alpha, Colors.WHITE);
-                    }
+				if (alpha > 8) {
+					context.getMatrices().push();
+					context.getMatrices().translate((float) (context.getScaledWindowWidth() / 2), (float) (context.getScaledWindowHeight() - 68) - 9 * count, 0.0F);
+					int j;
+					if (actionBarMessage.isTinted()) {
+						j = MathHelper.hsvToArgb(f / 50.0F, 0.7F, 0.6F, alpha);
+					} else {
+						j = ColorHelper.withAlpha(alpha, Colors.WHITE);
+					}
 
-                    int width = textRenderer.getWidth(actionBarMessage.getText());
-                    context.drawTextWithBackground(textRenderer, actionBarMessage.getText(), -width / 2, 12, width, j);
-                    context.getMatrices().pop();
-                    count++;
-                }
-            }
-        }
-        Profilers.get().pop();
-    }
+					int width = textRenderer.getWidth(actionBarMessage.getText());
+					context.drawTextWithBackground(textRenderer, actionBarMessage.getText(), -width / 2, 12, width, j);
+					context.getMatrices().pop();
+					count++;
+				}
+			}
+		}
+		Profilers.get().pop();
+	}
 }

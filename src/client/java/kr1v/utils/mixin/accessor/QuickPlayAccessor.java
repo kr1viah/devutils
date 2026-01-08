@@ -7,10 +7,13 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 
 @Mixin(QuickPlay.class)
 public interface QuickPlayAccessor {
-    @Invoker("startSingleplayer") static void startSingleplayer(MinecraftClient client, String levelName) {
-        throw new AssertionError();
-    }
-    @Invoker("startMultiplayer") static void startMultiplayer(MinecraftClient client, String levelName) {
-        throw new AssertionError();
-    }
+	@Invoker("startSingleplayer")
+	static void startSingleplayer(MinecraftClient client, String levelName) {
+		throw new AssertionError();
+	}
+
+	@Invoker("startMultiplayer")
+	static void startMultiplayer(MinecraftClient client, String levelName) {
+		throw new AssertionError();
+	}
 }

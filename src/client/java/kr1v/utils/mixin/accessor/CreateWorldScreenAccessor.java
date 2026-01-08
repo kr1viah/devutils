@@ -19,16 +19,20 @@ import java.util.OptionalLong;
 
 @Mixin(CreateWorldScreen.class)
 public interface CreateWorldScreenAccessor {
-    @Invoker void invokeCreateLevel();
-    @Invoker boolean invokeStartServer(CombinedDynamicRegistries<ServerDynamicRegistryType> combinedDynamicRegistries, SaveProperties saveProperties);
-    @Invoker("<init>")
-    static CreateWorldScreen newCreateWorldScreen(
-            MinecraftClient client,
-            @Nullable Screen parent,
-            GeneratorOptionsHolder generatorOptionsHolder,
-            Optional<RegistryKey<WorldPreset>> defaultWorldType,
-            OptionalLong seed,
-            CreateWorldCallback callback) {
-        throw new AssertionError();
-    }
+	@Invoker
+	void invokeCreateLevel();
+
+	@Invoker
+	boolean invokeStartServer(CombinedDynamicRegistries<ServerDynamicRegistryType> combinedDynamicRegistries, SaveProperties saveProperties);
+
+	@Invoker("<init>")
+	static CreateWorldScreen newCreateWorldScreen(
+			MinecraftClient client,
+			@Nullable Screen parent,
+			GeneratorOptionsHolder generatorOptionsHolder,
+			Optional<RegistryKey<WorldPreset>> defaultWorldType,
+			OptionalLong seed,
+			CreateWorldCallback callback) {
+		throw new AssertionError();
+	}
 }
