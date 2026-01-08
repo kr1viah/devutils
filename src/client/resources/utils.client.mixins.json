@@ -10,6 +10,7 @@
     "fastMainMenu.MouseMixin",
     "fastMainMenu.SplashOverlayMixin",
     "fastMainMenu.TitleScreenMixin",
+    "quickplay.MinecraftClientMixin",
     "testButton.TitleScreenMixin"
   ],
   "injectors": {
@@ -20,6 +21,7 @@
   },
   "mixins": [
     "accessor.Matrix4fStackAccessor",
+    "accessor.QuickPlayAccessor",
     "accessor.ScreenAccessor"
   ],
   "mixinextras": {

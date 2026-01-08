@@ -62,7 +62,6 @@ public class TestWorld {
     public static final ConfigBoolean     PERSIST = new ConfigBoolean("Persist world", false);
     @Label("Game")
     public static final ConfigOptionList  GAME_MODE = new ConfigOptionList("Game Mode", new EnumOption<>(WorldCreator.Mode.class, WorldCreator.Mode.CREATIVE, value -> value.name.getString()));
-    public static final ConfigBoolean     HARDCORE = new ConfigBoolean("Hardcore", false);
     public static final ConfigOptionList  DIFFICULTY = new ConfigOptionList("Difficulty", new EnumOption<>(Difficulty.class, Difficulty.EASY, value -> StringUtils.splitSnakeCase(value.name())));
     public static final ConfigBoolean     ALLOW_COMMANDS = new ConfigBoolean("Allow Commands", true);
     @Label("World")
