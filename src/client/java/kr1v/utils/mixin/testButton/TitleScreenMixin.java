@@ -19,8 +19,9 @@ public abstract class TitleScreenMixin extends Screen {
     @Inject(method = "addDevelopmentWidgets", at = @At("HEAD"), cancellable = true)
     private void addTestWorldWidget(int y, int spacingY, CallbackInfoReturnable<Integer> cir) {
         if (!TestWorld.ADD_TEST_WORLD_BUTTON.getBooleanValue()) return;
+        String buttonName = TestWorld.PERSIST.getBooleanValue() ? "Open Test World" : "Create Test World";
         this.addDrawableChild(
-                ButtonWidget.builder(Text.literal("Open Test World"), button -> TestWorld.doWorld())
+                ButtonWidget.builder(Text.literal(buttonName), button -> TestWorld.doWorld())
                         .dimensions(this.width / 2 - 100, y += spacingY, 200, 20)
                         .build()
         );

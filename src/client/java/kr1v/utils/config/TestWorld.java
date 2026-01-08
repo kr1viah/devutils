@@ -5,7 +5,6 @@ import fi.dy.masa.malilib.config.options.ConfigBoolean;
 import fi.dy.masa.malilib.config.options.ConfigOptionList;
 import kr1v.malilibApi.annotation.Config;
 import kr1v.malilibApi.annotation.Label;
-import kr1v.malilibApi.annotation.PopupConfig;
 import kr1v.malilibApi.config.ConfigButton;
 import kr1v.malilibApi.config.plus.ConfigBooleanPlus;
 import kr1v.malilibApi.config.plus.ConfigStringPlus;
@@ -34,9 +33,9 @@ import net.minecraft.world.gen.GeneratorOptions;
 import net.minecraft.world.gen.WorldPresets;
 import net.minecraft.world.level.WorldGenSettings;
 import net.minecraft.world.level.storage.LevelStorage;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
@@ -93,15 +92,6 @@ public class TestWorld {
         return (T) valueBacked.getValue();
     }
 
-    @PopupConfig(name = "Enabled features", buttonName = "Edit enabled features")
-    public static class EnabledFeatures {
-        // I can't find a way to loop over features in FeatureSet, so this will have to do :<
-        public static final ConfigBoolean VANILLA = new ConfigBoolean("Vanilla", true);
-        public static final ConfigBoolean TRADE_REBALANCE = new ConfigBoolean("Trade rebalance", false);
-        public static final ConfigBoolean REDSTONE_EXPERIMENTS = new ConfigBoolean("Redstone experiments", false);
-        public static final ConfigBoolean MINECART_IMPROVEMENTS = new ConfigBoolean("Minecraft improvements", false);
-    }
-
     public static final MinecraftClient client = MinecraftClient.getInstance();
 
     public static final String TEMP_WORLD_NAME = "Temporary Test World";
@@ -118,15 +108,23 @@ public class TestWorld {
         } else {
             if (levelStorage.levelExists(TEMP_WORLD_NAME)) {
                 Path tempWorldPath = levelStorage.resolve(TEMP_WORLD_NAME);
+                LevelStorage.Session session = null;
                 try {
-                    Files.delete(tempWorldPath);
+                    session = levelStorage.createSessionWithoutSymlinkCheck(TEMP_WORLD_NAME);
+                    session.deleteSessionLock();
                 } catch (IOException e) {
                     String couldNotDeleteMessage = "Couldn't delete temporary world! Loading it instead.";
                     UtilsClient.LOGGER.warn(couldNotDeleteMessage, e);
                     client.inGameHud.getChatHud().addMessage(Text.of(couldNotDeleteMessage));
+
                     Screen currentScreen = client.currentScreen;
                     client.createIntegratedServerLoader().start(TEMP_WORLD_NAME, () -> client.setScreen(currentScreen));
+
                     return;
+                } finally {
+                    if (session != null) {
+                        session.tryClose();
+                    }
                 }
             }
             CreateWorldCallback callback = (screen, combinedDynamicRegistries, levelProperties, dataPackTempDir) -> ((CreateWorldScreenAccessor) screen).invokeStartServer(combinedDynamicRegistries, levelProperties);
@@ -138,10 +136,7 @@ public class TestWorld {
                     GeneratorOptions.createRandom(), WorldPresets.createDemoOptions(context.worldGenRegistryManager())
             );
 
-            ResourcePackManager resourcePackManager = new ResourcePackManager(new VanillaDataPackProvider(client.getSymlinkFinder()));
-            DataConfiguration dataConfiguration = new DataConfiguration(new DataPackSettings(List.of("vanilla", "tests"), List.of()), getFeatures());
-            SaveLoading.DataPacks dataPacks = new SaveLoading.DataPacks(resourcePackManager, dataConfiguration, false, true);
-            SaveLoading.ServerConfig serverConfig = new SaveLoading.ServerConfig(dataPacks, CommandManager.RegistrationEnvironment.INTEGRATED, 2);
+            SaveLoading.ServerConfig serverConfig = getServerConfig();
             CompletableFuture<GeneratorOptionsHolder> completableFuture = SaveLoading.load(
                     serverConfig,
                     context -> new SaveLoading.LoadContext<>(
@@ -182,13 +177,15 @@ public class TestWorld {
         }
     }
 
+    private static SaveLoading.@NotNull ServerConfig getServerConfig() {
+        ResourcePackManager resourcePackManager = new ResourcePackManager(new VanillaDataPackProvider(client.getSymlinkFinder()));
+        DataConfiguration dataConfiguration = new DataConfiguration(new DataPackSettings(List.of("vanilla", "tests"), List.of()), FeatureFlags.FEATURE_MANAGER.getFeatureSet());
+        SaveLoading.DataPacks dataPacks = new SaveLoading.DataPacks(resourcePackManager, dataConfiguration, false, true);
+        return new SaveLoading.ServerConfig(dataPacks, CommandManager.RegistrationEnvironment.INTEGRATED, 2);
+    }
+
     private static FeatureSet getFeatures() {
-        var features = FeatureFlags.FEATURE_MANAGER.getFeatureSet();
-        if (!EnabledFeatures.VANILLA.getBooleanValue()) features = features.subtract(FeatureFlags.VANILLA_FEATURES);
-        if (!EnabledFeatures.TRADE_REBALANCE.getBooleanValue()) features = features.subtract(FeatureSet.of(FeatureFlags.TRADE_REBALANCE));
-        if (!EnabledFeatures.REDSTONE_EXPERIMENTS.getBooleanValue()) features = features.subtract(FeatureSet.of(FeatureFlags.REDSTONE_EXPERIMENTS));
-        if (!EnabledFeatures.MINECART_IMPROVEMENTS.getBooleanValue()) features = features.subtract(FeatureSet.of(FeatureFlags.MINECART_IMPROVEMENTS));
-        return features;
+        return FeatureFlags.FEATURE_MANAGER.getFeatureSet();
     }
 }
 
