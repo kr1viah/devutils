@@ -50,7 +50,7 @@ public class DummyScreen extends ChatScreen {
 		int half = scaledWindowWidth / 2;
 		for (int hotbarItem = 0; hotbarItem < 9; hotbarItem++) {
 			int x = half - 90 + hotbarItem * 20 + 2;
-			int y = context.getScaledWindowHeight() - 16 - 3;
+			int y = scaledWindowHeight - 16 - 3;
 			if (isPosInsideItem(mouseX, mouseY+1, x, y)) {
 				ItemStack stack = this.client.player.getInventory().getStack(hotbarItem);
 				if (stack.getItem() != Items.AIR) {
@@ -58,7 +58,6 @@ public class DummyScreen extends ChatScreen {
 				}
 			}
 		}
-		System.out.println("mx:" + mouseX + "my:" + mouseY);
 	}
 
 	private boolean isPosInsideItem(int mouseX, int mouseY, int itemX, int itemY) {
@@ -78,15 +77,15 @@ public class DummyScreen extends ChatScreen {
 				return true;
 			}
 
-			int half = scaledWindowWidth / 2;
-			for (int hotbarItem = 0; hotbarItem < 9; hotbarItem++) {
-				int x = half - 90 + hotbarItem * 20 + 2;
-				int y = scaledWindowHeight - 16 - 3;
-				if (isPosInsideItem((int) mouseX, (int) (mouseY+1), x, y)) {
-					if (this.client.player != null) {
-						this.client.player.getInventory().setSelectedSlot(hotbarItem);
-						return true;
-					}
+			if (this.client.player != null) {
+				int half = scaledWindowWidth / 2;
+				for (int hotbarItem = 0; hotbarItem < 9; hotbarItem++) {
+					int x = half - 90 + hotbarItem * 20 + 2;
+					int y = scaledWindowHeight - 16 - 3;
+					if (isPosInsideItem((int) mouseX, (int) (mouseY+1), x, y)) {
+							this.client.player.getInventory().setSelectedSlot(hotbarItem);
+							return true;
+						}
 				}
 			}
 		}
