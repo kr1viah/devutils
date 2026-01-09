@@ -18,7 +18,7 @@ public class MinecraftClientMixin {
 			original.call(instance, screen);
 			return;
 		}
-		QuickPlay.QuickPlayType type = TestWorld.getValue(QuickPlay.QUICK_PLAY_TYPE);
+		QuickPlay.QuickPlayType type = QuickPlay.QUICK_PLAY_TYPE.getValue();
 		if (QuickPlay.NAME.getStringValue().isEmpty() && type != QuickPlay.QuickPlayType.TEMPORARY) {
 			original.call(instance, screen);
 			return;

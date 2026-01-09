@@ -71,6 +71,7 @@ loom {
 
 
 repositories {
+    mavenLocal()
     mavenCentral()
     maven { url = uri("https://jitpack.io") }
     maven { url = uri("https://maven.nucleoid.xyz/") }
@@ -84,6 +85,10 @@ dependencies {
     modImplementation("com.github.sakura-ryoko:malilib:${project.property("malilib_version")}")
     modImplementation("com.github.kr1viah.malilib-api:${project.property("malilib_api_version")}")
     annotationProcessor("com.github.kr1viah.malilib-api:${project.property("malilib_api_version")}")
+
+    // mavenlocal
+//    modImplementation("com.kr1v:malilib-api-1.21.5:0.2.1")
+//    annotationProcessor("com.kr1v:malilib-api-1.21.5:0.2.1")
 }
 
 tasks.processResources {

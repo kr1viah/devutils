@@ -1,15 +1,15 @@
 package kr1v.utils.config;
 
 import fi.dy.masa.malilib.config.options.ConfigBoolean;
-import fi.dy.masa.malilib.config.options.ConfigOptionList;
 import kr1v.malilibApi.annotation.Config;
+import kr1v.malilibApi.config.ConfigCycle;
+import kr1v.malilibApi.config.EnumBackedCycleConfig;
 import kr1v.malilibApi.config.plus.ConfigStringPlus;
-import kr1v.utils.util.EnumOption;
 
 @Config(value = "Utils", name = "Quickplay")
 public class QuickPlay {
 	public static final ConfigBoolean ENABLE_QUICKPLAY = new ConfigBoolean("Enable quickplay", false, "Note:\nThis decides if this mod should affect quickplay in any way, not if it works at all.");
-	public static final ConfigOptionList QUICK_PLAY_TYPE = new ConfigOptionList("Type", new EnumOption<>(QuickPlayType.class, QuickPlayType.TEMPORARY, QuickPlayType::getName));
+	public static final ConfigCycle<QuickPlayType> QUICK_PLAY_TYPE = new EnumBackedCycleConfig.Builder<>("Type", QuickPlayType.class).displayNameProvider(QuickPlayType::getName).build();
 	public static final ConfigStringPlus NAME = new ConfigStringPlus("World/server to join", "", "If left empty, will do nothing. If Type is set to Temporary, will also do nothing");
 
 	public enum QuickPlayType {
