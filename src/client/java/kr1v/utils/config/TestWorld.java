@@ -59,7 +59,7 @@ public class TestWorld {
 	@Label("World")
 	public static final ConfigStringPlus SEED = new ConfigStringPlus("Seed");
 	public static final ConfigBoolean GENERATE_STRUCTURES = new ConfigBoolean("Generate Structures", true);
-	public static final ConfigCycle<RegistryKey<WorldPreset>> WORLD_PRESET = new ArrayBackedCycleConfig.Builder<>("Test 2", DEFAULT, FLAT, LARGE_BIOMES, AMPLIFIED, SINGLE_BIOME_SURFACE, DEBUG_ALL_BLOCK_STATES)
+	public static final ConfigCycle<RegistryKey<WorldPreset>> WORLD_PRESET = new ArrayBackedCycleConfig.Builder<>("World Preset", DEFAULT, FLAT, LARGE_BIOMES, AMPLIFIED, SINGLE_BIOME_SURFACE, DEBUG_ALL_BLOCK_STATES)
 			.displayNameProvider(worldPresetRegistryKey -> {
 				if (worldPresetRegistryKey == DEFAULT) return "Normal";
 				else if (worldPresetRegistryKey == FLAT) return "Flat";
