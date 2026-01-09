@@ -9,6 +9,7 @@ import net.minecraft.component.DataComponentTypes;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.text.Style;
+import net.minecraft.util.Arm;
 
 public class DummyScreen extends ChatScreen {
 	private final MinecraftClient client;
@@ -47,21 +48,21 @@ public class DummyScreen extends ChatScreen {
 		scaledWindowWidth = context.getScaledWindowWidth();
 		scaledWindowHeight = context.getScaledWindowHeight();
 
-		int half = scaledWindowWidth / 2;
 		for (int hotbarItem = 0; hotbarItem < 9; hotbarItem++) {
-			int x = half - 90 + hotbarItem * 20 + 2;
-			int y = scaledWindowHeight - 16 - 3;
-			if (isPosInsideItem(mouseX, mouseY+1, x, y)) {
+			if (isPosInsideItemRender(mouseX, mouseY+1, hotbarItem)) {
 				ItemStack stack = this.client.player.getInventory().getStack(hotbarItem);
 				if (stack.getItem() != Items.AIR) {
 					context.drawTooltip(this.textRenderer, getTooltipFromItem(this.client, stack), stack.getTooltipData(), mouseX, mouseY, stack.get(DataComponentTypes.TOOLTIP_STYLE));
 				}
 			}
 		}
-	}
-
-	private boolean isPosInsideItem(int mouseX, int mouseY, int itemX, int itemY) {
-		return mouseX >= itemX && mouseX < itemX + 16 && mouseY >= itemY && mouseY < itemY + 16;
+		int offhandIndex = client.player.getMainArm().getOpposite() == Arm.LEFT ? -1 : 10;
+		if (isPosInsideItemRender(mouseX, mouseY+1, offhandIndex)) {
+			ItemStack stack = this.client.player.getInventory().getStack(40); // offhand
+			if (stack.getItem() != Items.AIR) {
+				context.drawTooltip(this.textRenderer, getTooltipFromItem(this.client, stack), stack.getTooltipData(), mouseX, mouseY, stack.get(DataComponentTypes.TOOLTIP_STYLE));
+			}
+		}
 	}
 
 	@Override
@@ -78,18 +79,47 @@ public class DummyScreen extends ChatScreen {
 			}
 
 			if (this.client.player != null) {
-				int half = scaledWindowWidth / 2;
 				for (int hotbarItem = 0; hotbarItem < 9; hotbarItem++) {
-					int x = half - 90 + hotbarItem * 20 + 2;
-					int y = scaledWindowHeight - 16 - 3;
-					if (isPosInsideItem((int) mouseX, (int) (mouseY+1), x, y)) {
-							this.client.player.getInventory().setSelectedSlot(hotbarItem);
-							return true;
-						}
+					if (isPosInsideItemClick((int) mouseX, (int) (mouseY+1), hotbarItem)) {
+						this.client.player.getInventory().setSelectedSlot(hotbarItem);
+						return true;
+					}
 				}
 			}
 		}
 		this.client.setScreen(null);
 		return true;
+	}
+
+	private boolean isPosInsideItemClick(int mouseX, int mouseY, int hotbarItem) {
+		int half = scaledWindowWidth / 2;
+		int x = half - 90 + hotbarItem * 20 + 2 - 2; // move to the left by 2;
+		int y = scaledWindowHeight - 16 - 3 - 2; // lower by 2
+		int width = 20; // + 2 on both sides
+		int height = 20; // + 2 on both sides
+
+		return mouseX >= x
+				&& mouseX < x + width
+				&& mouseY >= y
+				&& mouseY < y + height;
+	}
+
+	private boolean isPosInsideItemRender(int mouseX, int mouseY, int hotbarItem) { // -1 for left offhand, 10 for right offhand
+		int half = scaledWindowWidth / 2;
+		int x = half - 90 + hotbarItem * 20 + 2;
+		int y = scaledWindowHeight - 16 - 3;
+		int width = 16;
+		int height = 16;
+
+		if (hotbarItem == -1) {
+			x = half - 117;
+		} else if (hotbarItem == 10) {
+			x = half + 102;
+		}
+
+		return mouseX >= x
+				&& mouseX < x + width
+				&& mouseY >= y
+				&& mouseY < y + height;
 	}
 }
