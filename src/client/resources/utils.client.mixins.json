@@ -23,7 +23,8 @@
   "mixins": [
     "accessor.Matrix4fStackAccessor",
     "accessor.QuickPlayAccessor",
-    "accessor.ScreenAccessor"
+    "accessor.ScreenAccessor",
+    "fly_speed.PlayerAbilitiesMixin"
   ],
   "mixinextras": {
     "minVersion": "0.5.0"
