@@ -10,6 +10,7 @@
     "fastMainMenu.MouseMixin",
     "fastMainMenu.SplashOverlayMixin",
     "fastMainMenu.TitleScreenMixin",
+    "fullbright.LightmapTextureManagerMixin",
     "quickplay.MinecraftClientMixin",
     "testButton.TitleScreenMixin"
   ],

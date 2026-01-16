@@ -48,7 +48,7 @@ import java.util.function.Function;
 import static net.minecraft.world.gen.WorldPresets.*;
 
 @SuppressWarnings("unused")
-@Config(value = "Utils", name = "Test World")
+@Config(value = UtilsClient.MOD_ID, name = "Test World")
 public class TestWorld {
 	public static final ConfigBooleanPlus ADD_TEST_WORLD_BUTTON = new ConfigBooleanPlus("Add test button to main menu", true);
 	public static final ConfigBoolean PERSIST = new ConfigBoolean("Persist world", false);

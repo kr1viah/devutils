@@ -7,10 +7,11 @@ import kr1v.malilibApi.config.plus.ConfigBooleanHotkeyedPlus;
 import kr1v.malilibApi.config.plus.ConfigHotkeyPlus;
 import kr1v.malilibApi.config.plus.ConfigStringPlus;
 import kr1v.utils.ChatHudManager;
+import kr1v.utils.UtilsClient;
 import net.minecraft.client.MinecraftClient;
 
 @SuppressWarnings("unused")
-@Config("Utils")
+@Config(UtilsClient.MOD_ID)
 public class Chat {
 	public static final ConfigBooleanHotkeyedPlus ADD_HOVER_TIMESTAMP = new ConfigBooleanHotkeyedPlus("Add hover timestamp", true);
 	public static final ConfigStringPlus TIMESTAMP_FORMAT = new ConfigStringPlus("Timestamp format", "[HH:mm:ss]");

@@ -18,18 +18,20 @@ import java.util.Map;
 
 public class UtilsClient implements ClientModInitializer {
 	public static final Logger LOGGER = LogUtils.getLogger();
-	public static final String MOD_ID = "Utils";
+	public static final String MOD_ID = "utils";
+	public static final String MOD_NAME = "Utils";
 
 	@Override
 	public void onInitializeClient() {
 		MalilibApi.registerMod(
 				MOD_ID,
-				MOD_ID,
+				MOD_NAME,
 				new ConfigHandler(MOD_ID) {
 					@Override
 					public void loadAdditionalData(JsonObject root) {
+						TestWorld.defaultGameRules = new GameRules(FeatureFlags.FEATURE_MANAGER.getFeatureSet());
 						if (root.has("gameRules") && root.get("gameRules").isJsonObject()) {
-							GameRules gameRules = new GameRules(FeatureFlags.FEATURE_MANAGER.getFeatureSet());
+							GameRules gameRules = TestWorld.defaultGameRules;
 							Map<String, JsonElement> map = root.getAsJsonObject("gameRules").asMap();
 							gameRules.accept(new GameRules.Visitor() {
 								@Override
@@ -56,9 +58,6 @@ public class UtilsClient implements ClientModInitializer {
 									}
 								}
 							});
-							TestWorld.defaultGameRules = gameRules;
-						} else {
-							TestWorld.defaultGameRules = new GameRules(FeatureFlags.FEATURE_MANAGER.getFeatureSet());
 						}
 					}
 
@@ -66,18 +65,20 @@ public class UtilsClient implements ClientModInitializer {
 					public void saveAdditionalData(JsonObject root) {
 						JsonObject gameRules = new JsonObject();
 						GameRules rules = TestWorld.defaultGameRules;
-						rules.accept(new GameRules.Visitor() {
-							@Override
-							public void visitBoolean(GameRules.Key<GameRules.BooleanRule> key, GameRules.Type<GameRules.BooleanRule> type) {
-								gameRules.addProperty("B/" + key.getCategory() + "/" + key.getTranslationKey(), rules.getBoolean(key));
-							}
+						if (rules != null) {
+							rules.accept(new GameRules.Visitor() {
+								@Override
+								public void visitBoolean(GameRules.Key<GameRules.BooleanRule> key, GameRules.Type<GameRules.BooleanRule> type) {
+									gameRules.addProperty("B/" + key.getCategory() + "/" + key.getTranslationKey(), rules.getBoolean(key));
+								}
 
-							@Override
-							public void visitInt(GameRules.Key<GameRules.IntRule> key, GameRules.Type<GameRules.IntRule> type) {
-								gameRules.addProperty("I/" + key.getCategory() + "/" + key.getTranslationKey(), rules.getInt(key));
-							}
-						});
-						root.add("gameRules", gameRules);
+								@Override
+								public void visitInt(GameRules.Key<GameRules.IntRule> key, GameRules.Type<GameRules.IntRule> type) {
+									gameRules.addProperty("I/" + key.getCategory() + "/" + key.getTranslationKey(), rules.getInt(key));
+								}
+							});
+							root.add("gameRules", gameRules);
+						}
 					}
 				},
 				new InputHandler(MOD_ID) {

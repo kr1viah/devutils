@@ -5,8 +5,9 @@ import kr1v.malilibApi.annotation.Config;
 import kr1v.malilibApi.config.ConfigCycle;
 import kr1v.malilibApi.config.EnumBackedCycleConfig;
 import kr1v.malilibApi.config.plus.ConfigStringPlus;
+import kr1v.utils.UtilsClient;
 
-@Config(value = "Utils", name = "Quickplay")
+@Config(value = UtilsClient.MOD_ID, name = "Quickplay")
 public class QuickPlay {
 	public static final ConfigBoolean ENABLE_QUICKPLAY = new ConfigBoolean("Enable quickplay", false, "Note:\nThis decides if this mod should affect quickplay in any way, not if it works at all.");
 	public static final ConfigCycle<QuickPlayType> QUICK_PLAY_TYPE = new EnumBackedCycleConfig.Builder<>("Type", QuickPlayType.class).displayNameProvider(QuickPlayType::getName).build();
