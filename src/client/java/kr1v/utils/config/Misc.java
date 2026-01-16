@@ -30,6 +30,7 @@ public class Misc {
 	public static final ConfigIntegerPlus ACTIVE_FLY_PRESET = new ConfigIntegerPlus("Active fly preset", 0);
 	public static final ConfigDoublePlus MULTIPLIER = new ConfigDoublePlus("Fly speed increase/decrease multiplier", 1.5, 0.0, Double.MAX_VALUE, false);
 
+	// TODO: add an overload for the constructors that automatically returns true
 	public static final ConfigHotkeyPlus NEXT_PRESET = new ConfigHotkeyPlus("Next fly preset", "BUTTON_5", (action, key) -> {
 		int active = ACTIVE_FLY_PRESET.getIntegerValue();
 		active++;
@@ -43,22 +44,6 @@ public class Misc {
 		active--;
 		if (active < 0) active = FLY_PRESETS.getStrings().size() - 1;
 		ACTIVE_FLY_PRESET.setIntegerValue(active);
-		return true;
-	});
-
-	// TODO: add an overload for the constructors that automatically returns true
-	public static final ConfigHotkeyPlus INCREASE_FLY_SPEED = new ConfigHotkeyPlus("Increase active presets' fly speed", (action, key) -> {
-		int active = ACTIVE_FLY_PRESET.getIntegerValue();
-		double activeFlySpeed = Double.parseDouble(FLY_PRESETS.getStrings().get(active));
-		activeFlySpeed *= MULTIPLIER.getDoubleValue();
-		FLY_PRESETS.getStrings().set(active, "" + activeFlySpeed);
-		return true;
-	});
-	public static final ConfigHotkeyPlus DECREASE_FLY_SPEED = new ConfigHotkeyPlus("Decrease active presets' fly speed", (action, key) -> {
-		int active = ACTIVE_FLY_PRESET.getIntegerValue();
-		double activeFlySpeed = Double.parseDouble(FLY_PRESETS.getStrings().get(active));
-		activeFlySpeed /= MULTIPLIER.getDoubleValue();
-		FLY_PRESETS.getStrings().set(active, "" + activeFlySpeed);
 		return true;
 	});
 }
