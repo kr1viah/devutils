@@ -3,11 +3,13 @@ package kr1v.utils.config;
 import fi.dy.masa.malilib.config.options.ConfigBoolean;
 import kr1v.malilibApi.annotation.Config;
 import kr1v.malilibApi.annotation.Label;
+import kr1v.malilibApi.annotation.PopupConfig;
 import kr1v.malilibApi.config.ArrayBackedCycleConfig;
 import kr1v.malilibApi.config.ConfigButton;
 import kr1v.malilibApi.config.ConfigCycle;
 import kr1v.malilibApi.config.EnumBackedCycleConfig;
 import kr1v.malilibApi.config.plus.ConfigBooleanPlus;
+import kr1v.malilibApi.config.plus.ConfigIntegerPlus;
 import kr1v.malilibApi.config.plus.ConfigStringPlus;
 import kr1v.utils.UtilsClient;
 import kr1v.utils.mixin.accessor.CreateWorldScreenAccessor;
@@ -43,6 +45,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.OptionalLong;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.locks.LockSupport;
 import java.util.function.Function;
 
 import static net.minecraft.world.gen.WorldPresets.*;
@@ -70,9 +73,19 @@ public class TestWorld {
 				else return "Unknown";
 			}).build();
 
+	@Label("Init")
+	public static final ConfigBoolean TELEPORT_TO_POS = new ConfigBoolean("Teleport to a specific position", false);
+
+	@PopupConfig
+	public static class Position {
+		public static final ConfigIntegerPlus x = new ConfigIntegerPlus("x");
+		public static final ConfigIntegerPlus y = new ConfigIntegerPlus("y");
+		public static final ConfigIntegerPlus z = new ConfigIntegerPlus("z");
+	}
+
 	public static GameRules defaultGameRules;
 
-	public static final ConfigButton<?> EDIT_GAME_RULES = new ConfigButton<>("", "Edit Game Rules", () -> {
+	public static final ConfigButton EDIT_GAME_RULES = new ConfigButton("", "Edit Game Rules", () -> {
 		MinecraftClient mc = MinecraftClient.getInstance();
 		Screen parent = mc.currentScreen;
 		mc.setScreen(new EditGameRulesScreen(defaultGameRules, gameRulesOptional -> {
@@ -162,6 +175,16 @@ public class TestWorld {
 
 			screenAccessor.setClient(client);
 			accessor.invokeCreateLevel();
+
+			if (TELEPORT_TO_POS.getBooleanValue()) {
+				new Thread(() -> {
+					while (MinecraftClient.getInstance().player == null) {
+						LockSupport.parkNanos(50_000_000);
+					}
+					LockSupport.parkNanos(50_000_000);
+					MinecraftClient.getInstance().getNetworkHandler().sendChatCommand("tp @s " + Position.x.getIntegerValue() + " " + Position.y.getIntegerValue() + " " + Position.z.getIntegerValue());
+				}).start();
+			}
 		}
 	}
 

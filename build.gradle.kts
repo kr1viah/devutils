@@ -17,9 +17,9 @@ base {
 repositories {
     mavenCentral()
     maven { url = uri("https://jitpack.io/") }
-//    maven { url = uri("https://repo.repsy.io/kr1v/maven/") }
+    maven { url = uri("https://repo.repsy.io/kr1v/maven/") }
     maven { url = uri("https://maven.terraformersmc.com/releases/") }
-    mavenLocal()
+//    mavenLocal()
 }
 
 tasks.register("collectFile") {
