@@ -2,7 +2,7 @@ plugins {
     id("dev.kikugie.stonecutter")
 }
 
-stonecutter active "1.21.5"
+stonecutter active "1.21.11"
 
 tasks.register("runClient_active_version") {
     group = "activeVersion"

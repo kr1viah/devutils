@@ -31,12 +31,13 @@ import net.minecraft.server.command.CommandManager;
 import net.minecraft.text.Text;
 import net.minecraft.util.Util;
 import net.minecraft.world.Difficulty;
-import net.minecraft.world.GameRules;
+/*? if =1.21.11 {*/import net.minecraft.world.rule.GameRules;/*?} else {*//*import net.minecraft.world.GameRules;*//*? }*/
 import net.minecraft.world.gen.GeneratorOptions;
 import net.minecraft.world.gen.WorldPreset;
 import net.minecraft.world.gen.WorldPresets;
 import net.minecraft.world.level.WorldGenSettings;
 import net.minecraft.world.level.storage.LevelStorage;
+
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -154,7 +155,11 @@ public class TestWorld {
 
 			CreateWorldScreen createWorldScreen = CreateWorldScreenAccessor.newCreateWorldScreen(
 					client,
-					null,
+					//? if =1.21.5 {
+					/*null,
+					*///? } else {
+					() -> {},
+					//? }
 					completableFuture.join(),
 					Optional.of(WORLD_PRESET.getValue()),
 					OptionalLong.empty(),
@@ -192,7 +197,12 @@ public class TestWorld {
 		ResourcePackManager resourcePackManager = new ResourcePackManager(new VanillaDataPackProvider(client.getSymlinkFinder()));
 		DataConfiguration dataConfiguration = new DataConfiguration(new DataPackSettings(List.of("vanilla", "tests"), List.of()), FeatureFlags.FEATURE_MANAGER.getFeatureSet());
 		SaveLoading.DataPacks dataPacks = new SaveLoading.DataPacks(resourcePackManager, dataConfiguration, false, true);
-		return new SaveLoading.ServerConfig(dataPacks, CommandManager.RegistrationEnvironment.INTEGRATED, 2);
+		//? if =1.21.5 {
+		/*var perms = 2;
+		*///? } else {
+		var perms = net.minecraft.command.permission.PermissionPredicate.ALL;
+		//? }
+		return new SaveLoading.ServerConfig(dataPacks, CommandManager.RegistrationEnvironment.INTEGRATED, perms);
 	}
 }
 

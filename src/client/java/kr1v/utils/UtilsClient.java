@@ -11,7 +11,7 @@ import kr1v.utils.interfaces.IMouseReleased;
 import net.fabricmc.api.ClientModInitializer;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.resource.featuretoggle.FeatureFlags;
-import net.minecraft.world.GameRules;
+/*? if =1.21.11 {*/import net.minecraft.world.rule.*;/*?} else {*//*import net.minecraft.world.GameRules;*//*? }*/
 import org.slf4j.Logger;
 
 import java.util.Map;
@@ -23,7 +23,8 @@ public class UtilsClient implements ClientModInitializer {
 
 	@Override
 	public void onInitializeClient() {
-		MalilibApi.registerMod(
+		//? if =1.21.5 {
+		/*MalilibApi.registerMod(
 				MOD_ID,
 				MOD_NAME,
 				new ConfigHandler(MOD_ID) {
@@ -91,5 +92,77 @@ public class UtilsClient implements ClientModInitializer {
 					}
 				}
 		);
+		*///? } else {
+		MalilibApi.registerMod(
+				MOD_ID,
+				MOD_NAME,
+				new ConfigHandler(MOD_ID) {
+					@Override
+					public void loadAdditionalData(JsonObject root) {
+						TestWorld.defaultGameRules = new GameRules(FeatureFlags.FEATURE_MANAGER.getFeatureSet());
+						if (root.has("gameRules") && root.get("gameRules").isJsonObject()) {
+							GameRules gameRules = TestWorld.defaultGameRules;
+							Map<String, JsonElement> map = root.getAsJsonObject("gameRules").asMap();
+							gameRules.accept(new GameRuleVisitor() {
+								@Override
+								public void visitInt(GameRule<Integer> rule) {
+									String keyStr = "I/" + rule.getCategory() + "/" + rule.getTranslationKey();
+									if (map.containsKey(keyStr)) {
+										var val = map.get(keyStr);
+										if (val.isJsonPrimitive() && val.getAsJsonPrimitive().isNumber()) {
+											int integer = val.getAsInt();
+											gameRules.setValue(rule, integer, null);
+										}
+									}
+								}
+
+								@Override
+								public void visitBoolean(GameRule<Boolean> rule) {
+									String keyStr = "B/" + rule.getCategory() + "/" + rule.getTranslationKey();
+									if (map.containsKey(keyStr)) {
+										var val = map.get(keyStr);
+										if (val.isJsonPrimitive() && val.getAsJsonPrimitive().isBoolean()) {
+											boolean bool = val.getAsBoolean();
+											gameRules.setValue(rule, bool, null);
+										}
+									}
+								}
+							});
+						}
+					}
+
+					@Override
+					public void saveAdditionalData(JsonObject root) {
+						JsonObject gameRules = new JsonObject();
+						GameRules rules = TestWorld.defaultGameRules;
+						if (rules != null) {
+							rules.accept(new GameRuleVisitor() {
+								@Override
+								public void visitBoolean(GameRule<Boolean> rule) {
+									gameRules.addProperty("B/" + rule.getCategory() + "/" + rule.getTranslationKey(), rules.getValue(rule));
+									GameRuleVisitor.super.visitBoolean(rule);
+								}
+
+								@Override
+								public void visitInt(GameRule<Integer> rule) {
+									GameRuleVisitor.super.visitInt(rule);
+									gameRules.addProperty("I/" + rule.getCategory() + "/" + rule.getTranslationKey(), rules.getValue(rule));
+								}
+							});
+							root.add("gameRules", gameRules);
+						}
+					}
+				},
+				new InputHandler(MOD_ID) {
+					@Override
+					public boolean onMouseClick(net.minecraft.client.gui.Click click, boolean eventButtonState) {
+						if (click.button() == 0 && !eventButtonState) {
+							((IMouseReleased) MinecraftClient.getInstance().inGameHud.getChatHud()).utils$mouseReleased(click.x(), click.y());
+						}
+						return super.onMouseClick(click, eventButtonState);
+					}
+				}
+		);
+		//? }
 	}
 }

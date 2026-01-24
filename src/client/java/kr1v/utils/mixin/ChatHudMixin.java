@@ -1,15 +1,14 @@
 package kr1v.utils.mixin;
 
-import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
+//? if =1.21.5 {
+/*import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import kr1v.utils.config.Chat;
-import kr1v.utils.interfaces.IMouseReleased;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.hud.ChatHud;
 import net.minecraft.client.gui.hud.ChatHudLine;
 import net.minecraft.client.gui.hud.MessageIndicator;
 import net.minecraft.client.util.ChatMessages;
@@ -20,7 +19,6 @@ import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.MathHelper;
 import org.spongepowered.asm.mixin.Final;
-import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -37,10 +35,20 @@ import java.util.Collections;
 import java.util.List;
 
 import static kr1v.utils.ChatHudManager.selectedText;
+*///? }
+import kr1v.utils.interfaces.IMouseReleased;
+import net.minecraft.client.gui.hud.ChatHud;
+import org.spongepowered.asm.mixin.Mixin;
 
 @Mixin(ChatHud.class)
 public abstract class ChatHudMixin implements IMouseReleased {
-	@Shadow
+	//? if =1.21.11 {
+	@Override
+	public void utils$mouseReleased(double mouseX, double mouseY) {
+
+	}
+	//? } else if =1.21.5 {
+	/*@Shadow
 	public abstract int getWidth();
 
 	@Shadow
@@ -391,4 +399,5 @@ public abstract class ChatHudMixin implements IMouseReleased {
 	private boolean isLast(int index) {
 		return index == normLastSelectedLine;
 	}
+	*///? }
 }

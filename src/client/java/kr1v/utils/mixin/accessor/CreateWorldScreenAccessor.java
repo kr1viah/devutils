@@ -10,7 +10,6 @@ import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.ServerDynamicRegistryType;
 import net.minecraft.world.SaveProperties;
 import net.minecraft.world.gen.WorldPreset;
-import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Invoker;
 
@@ -28,7 +27,11 @@ public interface CreateWorldScreenAccessor {
 	@Invoker("<init>")
 	static CreateWorldScreen newCreateWorldScreen(
 			MinecraftClient client,
-			@Nullable Screen parent,
+			//? if =1.21.5 {
+			/*@org.jetbrains.annotations.Nullable Screen parent,
+			*///? } else {
+			Runnable onClosed,
+			//? }
 			GeneratorOptionsHolder generatorOptionsHolder,
 			Optional<RegistryKey<WorldPreset>> defaultWorldType,
 			OptionalLong seed,

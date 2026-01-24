@@ -71,8 +71,12 @@ public class InGameHudMixin {
 				}
 
 				if (alpha > 8) {
-					context.getMatrices().push();
-					context.getMatrices().translate((float) (context.getScaledWindowWidth() / 2), (float) (context.getScaledWindowHeight() - 68) - 9 * count, 0.0F);
+					//? if =1.21.5
+					//context.getMatrices().push();
+					context.getMatrices().translate((float) (context.getScaledWindowWidth() / 2), (float) (context.getScaledWindowHeight() - 68) - 9 * count
+							//? if =1.21.5
+							//, 0.0F
+					);
 					int j;
 					if (actionBarMessage.isTinted()) {
 						j = MathHelper.hsvToArgb(f / 50.0F, 0.7F, 0.6F, alpha);
@@ -82,7 +86,8 @@ public class InGameHudMixin {
 
 					int width = textRenderer.getWidth(actionBarMessage.getText());
 					context.drawTextWithBackground(textRenderer, actionBarMessage.getText(), -width / 2, 12, width, j);
-					context.getMatrices().pop();
+					//? if =1.21.5
+					//context.getMatrices().pop();
 					count++;
 				}
 			}

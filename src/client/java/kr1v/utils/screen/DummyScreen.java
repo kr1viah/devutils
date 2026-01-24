@@ -8,14 +8,13 @@ import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.text.Style;
 import net.minecraft.util.Arm;
 
 public class DummyScreen extends ChatScreen {
 	private final MinecraftClient client;
 
 	public DummyScreen() {
-		super("");
+		super(""/*? if =1.21.11 {*/, false/*? }*/);
 		this.client = MinecraftClient.getInstance();
 		if (this.client.player == null) this.client.setScreen(null);
 	}
@@ -43,7 +42,10 @@ public class DummyScreen extends ChatScreen {
 
 	@Override
 	public void render(DrawContext context, int mouseX, int mouseY, float deltaTicks) {
-		this.client.inGameHud.getChatHud().render(context, this.client.inGameHud.getTicks(), mouseX, mouseY, true);
+		//? if =1.21.5
+		//this.client.inGameHud.getChatHud().render(context, this.client.inGameHud.getTicks(), mouseX, mouseY, true);
+		//? if =1.21.11
+		this.client.inGameHud.getChatHud().render(context, client.textRenderer, this.client.inGameHud.getTicks(), mouseX, mouseY, true, true);
 		if (this.client.player == null) return;
 		scaledWindowWidth = context.getScaledWindowWidth();
 		scaledWindowHeight = context.getScaledWindowHeight();
@@ -65,18 +67,27 @@ public class DummyScreen extends ChatScreen {
 		}
 	}
 
+	//? if =1.21.11 {
 	@Override
+	public boolean mouseClicked(net.minecraft.client.gui.Click click, boolean doubled) {
+		return this.mouseClicked(click.x(), click.y(), click.button());
+	}
+	//? }
+
+	//? if =1.21.5
+	//@Override
 	public boolean mouseClicked(double mouseX, double mouseY, int button) {
 		if (button == 0) {
 			ChatHud chatHud = this.client.inGameHud.getChatHud();
-			if (chatHud.mouseClicked(mouseX, mouseY)) {
+			//? if =1.21.5 {
+			/*if (chatHud.mouseClicked(mouseX, mouseY)) {
 				return true;
 			}
-
-			Style style = this.client.inGameHud.getChatHud().getTextStyleAt(mouseX, mouseY);
+			net.minecraft.text.Style style = this.client.inGameHud.getChatHud().getTextStyleAt(mouseX, mouseY);
 			if (style != null && this.handleTextClick(style)) {
 				return true;
 			}
+			*///? }
 
 			if (this.client.player != null) {
 				for (int hotbarItem = 0; hotbarItem < 9; hotbarItem++) {
