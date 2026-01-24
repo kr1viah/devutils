@@ -1,7 +1,6 @@
 package kr1v.utils.mixin.accessor;
 
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.world.CreateWorldCallback;
 import net.minecraft.client.gui.screen.world.CreateWorldScreen;
 import net.minecraft.client.world.GeneratorOptionsHolder;
@@ -28,7 +27,7 @@ public interface CreateWorldScreenAccessor {
 	static CreateWorldScreen newCreateWorldScreen(
 			MinecraftClient client,
 			//? if =1.21.5 {
-			/*@org.jetbrains.annotations.Nullable Screen parent,
+			/*@org.jetbrains.annotations.Nullable net.minecraft.client.gui.screen.Screen parent,
 			*///? } else {
 			Runnable onClosed,
 			//? }

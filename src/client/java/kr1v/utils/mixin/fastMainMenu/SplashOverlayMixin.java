@@ -16,7 +16,6 @@ import kr1v.utils.mixin.accessor.Matrix4fStackAccessor;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.SplashOverlay;
-import net.minecraft.client.render.RenderLayer;
 import net.minecraft.util.Identifier;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -24,8 +23,6 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-
-import java.util.function.Function;
 
 @Mixin(SplashOverlay.class)
 public class SplashOverlayMixin {
@@ -38,7 +35,7 @@ public class SplashOverlayMixin {
 	@Definition(id = "fill", method = "Lnet/minecraft/client/gui/DrawContext;fill(Lnet/minecraft/client/render/RenderLayer;IIIII)V")
 	@Expression("context.fill(?, ?, ?, ?, ?)")
 	@WrapWithCondition(method = "render", at = @At("MIXINEXTRAS:EXPRESSION"))
-	private boolean preventFill(DrawContext instance, RenderLayer layer, int x1, int y1, int x2, int y2, int color) {
+	private boolean preventFill(DrawContext instance, net.minecraft.client.render.RenderLayer layer, int x1, int y1, int x2, int y2, int color) {
 		return !Misc.FAST_MAIN_MENU.getBooleanValue();
 	}
 
@@ -46,7 +43,7 @@ public class SplashOverlayMixin {
 	@Definition(id = "drawTexture", method = "Lnet/minecraft/client/gui/DrawContext;drawTexture(Ljava/util/function/Function;Lnet/minecraft/util/Identifier;IIFFIIIIIII)V")
 	@Expression("context.drawTexture(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
 	@WrapWithCondition(method = "render", at = @At("MIXINEXTRAS:EXPRESSION"))
-	private boolean preventFill(DrawContext instance, Function<Identifier, RenderLayer> renderLayers, Identifier sprite, int x, int y, float u, float v, int width, int height, int regionWidth, int regionHeight, int textureWidth, int textureHeight, int color) {
+	private boolean preventFill(DrawContext instance, java.util.function.Function<Identifier, net.minecraft.client.render.RenderLayer> renderLayers, Identifier sprite, int x, int y, float u, float v, int width, int height, int regionWidth, int regionHeight, int textureWidth, int textureHeight, int color) {
 		return !Misc.FAST_MAIN_MENU.getBooleanValue();
 	}
 	*///? } else {
