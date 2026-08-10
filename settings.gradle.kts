@@ -64,7 +64,7 @@ object Versions {
             .reversed()
 
         ALL_LIST = allVersionsStrings
-            .subList(60, allVersionsStrings.size)
+            .subList(/*55 <- includes 1.14-1.14.4*/ 60, allVersionsStrings.size)
             .reversed()
     }
 }

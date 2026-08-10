@@ -64,6 +64,10 @@ val malilibVersion: String = when {
     sc.current.parsed >= "1.15.2" -> "1.15.2:0.10.0-dev.21+arne.4"
     sc.current.parsed >= "1.15.1" -> "1.15.1:0.10.0-dev.20+beta.1"
     sc.current.parsed >= "1.15" ->   "1.15.0:0.10.0-dev.20+beta.2"
+    sc.current.parsed >= "1.14.4" -> "1.14.4:0.10.0-dev.20+arne.3"
+    sc.current.parsed >= "1.14.3" -> "1.14.3:0.10.0-dev.20"
+    sc.current.parsed >= "1.14.2" -> "1.14.2:0.10.0-dev.20"
+    sc.current.parsed >= "1.14" -> "1.14.0:0.10.0-dev.19"
     else -> throw IllegalStateException()
 }
 
@@ -90,7 +94,18 @@ repositories {
 
 dependencies {
     minecraft("com.mojang:minecraft:${sc.current.version}")
-    loomx.applyMojangMappings()
+    if (sc.current.parsed >= "1.14.4")
+        loomx.applyMojangMappings()
+    else {
+        val mappings by lazy {
+            val loom = project.extensions["loom"]
+            val method = loom::class.java.getMethod("officialMojangMappings")
+            method.invoke(loom)
+        }
+        project.dependencies.add("mappings", mappings)
+    }
+    loom.officialMojangMappings()
+
 
     modImplementation("net.fabricmc:fabric-loader:${property("deps.fabric_loader")}")
     modImplementation("net.kr1v:malilib-api:${malilibApiVersion}") {
