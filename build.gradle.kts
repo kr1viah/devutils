@@ -98,7 +98,7 @@ dependencies {
 
     modImplementation("net.fabricmc:fabric-loader:${property("deps.fabric_loader")}")
     modImplementation("net.kr1v:malilib-api:${malilibApiVersion}")
-    modImplementation("net.kr1v:malilib-api-processor:1.0.0")
+    annotationProcessor("net.kr1v:malilib-api-processor:1.0.0")
     modImplementation("fi.dy.masa.malilib:malilib-fabric-$malilibVersion")
 }
 
