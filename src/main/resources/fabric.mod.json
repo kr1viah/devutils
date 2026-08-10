@@ -5,7 +5,7 @@
   "name": "${name}",
   "description": "Collection of useful utilities for development",
   "authors": [
-    "Me!"
+    "kr1v"
   ],
   "license": "MIT",
   "icon": "assets/template/icon.png",
