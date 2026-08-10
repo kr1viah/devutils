@@ -94,7 +94,18 @@ repositories {
 
 dependencies {
     minecraft("com.mojang:minecraft:${sc.current.version}")
-    loomx.applyMojangMappings()
+    if (sc.current.parsed >= "1.14.4")
+        loomx.applyMojangMappings()
+    else {
+        val mappings by lazy {
+            val loom = project.extensions["loom"]
+            val method = loom::class.java.getMethod("officialMojangMappings")
+            method.invoke(loom)
+        }
+        project.dependencies.add("mappings", mappings)
+    }
+    loom.officialMojangMappings()
+
 
     modImplementation("net.fabricmc:fabric-loader:${property("deps.fabric_loader")}")
     modImplementation("net.kr1v:malilib-api:${malilibApiVersion}") {
