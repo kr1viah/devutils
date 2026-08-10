@@ -5,6 +5,7 @@ mod.group = "net.kr1v.devutils"
 mod.version = "0.0.0"
 
 deps.fabric_loader = "0.19.3"
+deps.malilib_api = "0.8.3"
 loomx.loom_version = "1.17-SNAPSHOT"
 
 ["1.21.1"]
