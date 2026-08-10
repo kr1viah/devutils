@@ -1,5 +1,5 @@
 package net.kr1v.devutils.mixin;
-
+/*
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.kr1v.devutils.config.Main;
@@ -17,3 +17,4 @@ public class GuiMixin {
 		original.call(instance, graphics, mouseX, mouseY, a);
 	}
 }
+*/
