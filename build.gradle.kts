@@ -97,14 +97,14 @@ dependencies {
     loomx.applyMojangMappings()
 
     modImplementation("net.fabricmc:fabric-loader:${property("deps.fabric_loader")}")
-    modImplementation("net.kr1v:malilib-api:${malilibApiVersion}") {
+    include(modImplementation("net.kr1v:malilib-api:${malilibApiVersion}") {
         exclude("fi.dy.masa.malilib")
         exclude("io.github.prospector")
-    }
+    })
     annotationProcessor("net.kr1v:malilib-api-processor:1.0.0")
-    modImplementation("fi.dy.masa.malilib:malilib-fabric-$malilibVersion") {
+    include(modImplementation("fi.dy.masa.malilib:malilib-fabric-$malilibVersion") {
         exclude("io.github.prospector")
-    }
+    })
 }
 
 loom {
