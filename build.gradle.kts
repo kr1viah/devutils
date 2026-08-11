@@ -175,7 +175,7 @@ publishing {
             artifactId = "devutils-${sc.current.version}"
             version = "${project.property("mod.version")}"
 
-            from(components["java"])
+            artifact(loomx.modJar)
         }
     }
 
