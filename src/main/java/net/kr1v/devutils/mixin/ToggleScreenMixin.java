@@ -6,7 +6,7 @@ import net.kr1v.devutils.config.Main;
 //? if >=1.20 {
 //~ if >=26.1 'Graphics' -> 'GraphicsExtractor'
 import net.minecraft.client.gui.GuiGraphicsExtractor;
-//? } else
+//? } else if >=1.16
 //import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.screens.Screen;
 import org.spongepowered.asm.mixin.Mixin;
@@ -41,12 +41,18 @@ public class ToggleScreenMixin {
 		if (Main.HIDE_SCREENS.getBooleanValue()) return;
 		original.call(instance, guiGraphics, mouseX, mouseY, a);
 	}
-	*///? } else {
+	*///? } else if >=1.16 {
 	/*//~ if >=1.19.3 'Screen;render' -> 'Screen;renderWithTooltip'
-	@WrapOperation(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/Screen;renderWithTooltip(Lcom/mojang/blaze3d/vertex/PoseStack;IIF)V"))
+	@WrapOperation(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/Screen;render(Lcom/mojang/blaze3d/vertex/PoseStack;IIF)V"))
 	private void wrap(Screen instance, PoseStack poseStack, int mouseX, int mouseY, float a, Operation<Void> original) {
 		if (Main.HIDE_SCREENS.getBooleanValue()) return;
 		original.call(instance, poseStack, mouseX, mouseY, a);
+	}
+	*///? } else {
+	/*@WrapOperation(method = "render*", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/Screen;render(IIF)V"))
+	private void wrap(Screen instance, int mouseX, int mouseY, float a, Operation<Void> original) {
+		if (Main.HIDE_SCREENS.getBooleanValue()) return;
+		original.call(instance, mouseX, mouseY, a);
 	}
 	*///? }
 }
