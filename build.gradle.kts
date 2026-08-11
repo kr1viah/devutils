@@ -185,14 +185,6 @@ publishing {
         val repsyToken = providers.environmentVariable("REPSY_TOKEN")
         val repsyUsername = providers.environmentVariable("REPSY_USERNAME")
 
-        if (!repsyToken.isPresent || repsyToken.get().isEmpty()) {
-            throw GradleException("Missing REPSY_TOKEN")
-        }
-
-        if (!repsyUsername.isPresent || repsyUsername.get().isEmpty()) {
-            throw GradleException("Missing REPSY_USERNAME")
-        }
-
         maven {
             name = "repsy"
             url = uri("https://repo.repsy.io/kr1v/maven/")
