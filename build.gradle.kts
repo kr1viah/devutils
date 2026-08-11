@@ -1,5 +1,6 @@
 plugins {
     id("dev.kikugie.loom-back-compat")
+    id("maven-publish")
 }
 
 version = "${property("mod.version")}+${sc.current.version}"
@@ -72,9 +73,6 @@ val malilibVersion: String = when {
     else -> throw IllegalStateException()
 }
 //@formatter-on
-
-val compatibleVersions: List<String> = sc.properties.rawOrNull("mod", "mc_releases")
-    ?.asList().orEmpty().map { it.toString() }
 
 repositories {
     /**
@@ -167,5 +165,42 @@ tasks {
         inputs.property("version", project.property("mod.version"))
         from(loomx.modJar.flatMap { it.archiveFile }, loomx.modSourcesJar.flatMap { it.archiveFile })
         into(rootProject.layout.buildDirectory.file("libs/${project.property("mod.version")}"))
+    }
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("mavenJava") {
+            groupId = "net.kr1v.devutils"
+            artifactId = "devutils-${sc.current.version}"
+            version = "${project.property("mod.version")}"
+
+            from(components["java"])
+        }
+    }
+
+    repositories {
+        mavenLocal()
+
+        val repsyToken = providers.environmentVariable("REPSY_TOKEN")
+        val repsyUsername = providers.environmentVariable("REPSY_USERNAME")
+
+        if (!repsyToken.isPresent || repsyToken.get().isEmpty()) {
+            throw GradleException("Missing REPSY_TOKEN")
+        }
+
+        if (!repsyUsername.isPresent || repsyUsername.get().isEmpty()) {
+            throw GradleException("Missing REPSY_USERNAME")
+        }
+
+        maven {
+            name = "repsy"
+            url = uri("https://repo.repsy.io/kr1v/maven/")
+
+            credentials {
+                username = repsyUsername.get()
+                password = repsyToken.get()
+            }
+        }
     }
 }
