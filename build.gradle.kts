@@ -182,16 +182,16 @@ publishing {
     repositories {
         mavenLocal()
 
-        val repsyToken = providers.environmentVariable("REPSY_TOKEN")
-        val repsyUsername = providers.environmentVariable("REPSY_USERNAME")
+        val repsyToken = providers.environmentVariable("REPSY_TOKEN").orNull
+        val repsyUsername = providers.environmentVariable("REPSY_USERNAME").orNull
 
         maven {
             name = "repsy"
             url = uri("https://repo.repsy.io/kr1v/maven/")
 
             credentials {
-                username = repsyUsername.get()
-                password = repsyToken.get()
+                username = repsyUsername
+                password = repsyToken
             }
         }
     }
