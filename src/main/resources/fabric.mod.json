@@ -21,6 +21,8 @@
   "accessWidener": "devutils.ct",
   "depends": {
     "fabricloader": ">=0.17",
-    "minecraft": "${minecraft}"
+    "minecraft": "${minecraft}",
+    "malilib": "*",
+    "malilib-api": "*"
   }
 }
