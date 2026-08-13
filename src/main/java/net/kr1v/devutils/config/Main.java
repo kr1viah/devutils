@@ -9,6 +9,9 @@ import kr1v.malilibApi.config.plus.ConfigHotkeyPlus;
 import net.kr1v.devutils.DevUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.MouseHandler;
+import net.minecraft.client.player.LocalPlayer;
+//? if  >= 1.19.3
+import net.minecraft.world.phys.Vec3;
 
 @SuppressWarnings("unused")
 @Config(DevUtils.MOD_ID)
@@ -28,6 +31,23 @@ public class Main {
 					handler.releaseMouse();
 				} else {
 					handler.grabMouse();
+				}
+				return true;
+			});
+	public static final ConfigHotkeyPlus FORCE_TOGGLE_FLIGHT = new ConfigHotkeyPlus("Force toggle creative flight", "G")
+			.setAllowExtraKeys(true).setPressCallback((button, keybind) -> {
+				LocalPlayer player = Minecraft.getInstance().player;
+				//~ if >=1.17 'abilities' -> 'getAbilities()' as _
+				if (player != null && player.getAbilities().mayfly) {
+					player.getAbilities().flying = !player.getAbilities().flying;
+					//~ if >=1.20 'isOnGround()' -> 'onGround()'
+					//~ if >1.15.2 'onGround' -> 'isOnGround()'
+					if (player.onGround()) {
+						//? if  >= 1.19.3 {
+						player.addDeltaMovement(new Vec3(0, 0.08, 0));
+						//? } else
+						//player.setDeltaMovement(player.getDeltaMovement().add(0, 0.08, 0));
+					}
 				}
 				return true;
 			});
