@@ -2,7 +2,7 @@
 mod.id = "devutils"
 mod.name = "devutils"
 mod.group = "net.kr1v.devutils"
-mod.version = "0.0.0"
+mod.version = "0.0.1"
 
 deps.fabric_loader = "0.19.3"
 deps.malilib_api = "0.8.3"
