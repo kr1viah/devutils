@@ -43,10 +43,8 @@ public class Main {
 					//~ if >=1.20 'isOnGround()' -> 'onGround()'
 					//~ if >1.15.2 'onGround' -> 'isOnGround()'
 					if (player.onGround()) {
-						//? if  >= 1.19.3 {
+						//~ if >= 1.19.3 'setDeltaMovement(player.getDeltaMovement().add(' -> 'addDeltaMovement(new Vec3('
 						player.addDeltaMovement(new Vec3(0, 0.08, 0));
-						//? } else
-						//player.setDeltaMovement(player.getDeltaMovement().add(0, 0.08, 0));
 					}
 				}
 				return true;
