@@ -171,11 +171,13 @@ tasks {
 publishing {
     publications {
         create<MavenPublication>("mavenJava") {
-            groupId = "net.kr1v.devutils"
-            artifactId = "devutils-${sc.current.version}"
+            groupId = "net.kr1v"
+            artifactId = "devutils"
             version = "${project.property("mod.version")}"
 
-            artifact(loomx.modJar)
+            artifact(loomx.modJar) {
+                classifier = sc.current.version
+            }
         }
     }
 
