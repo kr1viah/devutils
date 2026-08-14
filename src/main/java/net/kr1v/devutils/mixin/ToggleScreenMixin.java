@@ -12,13 +12,10 @@ import net.minecraft.client.gui.screens.Screen;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
-@Mixin(
-		//? if >=26.2 {
-		net.minecraft.client.gui.Gui.class
-		//? } else {
-		//net.minecraft.client.renderer.GameRenderer.class
-		//? }
-)
+//? if >=26.2 {
+@Mixin(net.minecraft.client.gui.Gui.class)
+//? } else
+//@Mixin(net.minecraft.client.renderer.GameRenderer.class)
 public class ToggleScreenMixin {
 	//? if >=26.1 {
 	@WrapOperation(method =

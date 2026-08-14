@@ -16,7 +16,7 @@ import net.minecraft.world.phys.Vec3;
 @SuppressWarnings("unused")
 @Config(DevUtils.MOD_ID)
 public class Main {
-	public static final ConfigHotkeyPlus OPEN_SCREEN = new ConfigHotkeyPlus("Open screen", "R,C").setPressCallback((keyAction, iKeybind) -> {
+	public static final ConfigHotkeyPlus OPEN_SCREEN = new ConfigHotkeyPlus("Open screen", "R,C").setPressCallback((action, key) -> {
 		MalilibApi.openScreenFor(DevUtils.MOD_ID);
 		return true;
 	});
@@ -35,13 +35,13 @@ public class Main {
 				return true;
 			});
 	public static final ConfigHotkeyPlus FORCE_TOGGLE_FLIGHT = new ConfigHotkeyPlus("Force toggle creative flight", "G")
-			.setAllowExtraKeys(true).setPressCallback((button, keybind) -> {
+			.setAllowExtraKeys(true).setPressCallback((action, key) -> {
 				LocalPlayer player = Minecraft.getInstance().player;
 				//~ if >=1.17 'abilities' -> 'getAbilities()' as _
 				if (player != null && player.getAbilities().mayfly) {
 					player.getAbilities().flying = !player.getAbilities().flying;
 					//~ if >=1.20 'isOnGround()' -> 'onGround()'
-					//~ if >1.15.2 'onGround' -> 'isOnGround()'
+					//~ if >=1.16 'onGround' -> 'isOnGround()'
 					if (player.onGround()) {
 						//~ if >= 1.19.3 'setDeltaMovement(player.getDeltaMovement().add(' -> 'addDeltaMovement(new Vec3('
 						player.addDeltaMovement(new Vec3(0, 0.08, 0));
@@ -49,6 +49,9 @@ public class Main {
 				}
 				return true;
 			});
+
+	public static final ConfigBooleanHotkeyedPlus FULLBRIGHT = new ConfigBooleanHotkeyedPlus("Fullbright", true, "N")
+			.setAllowExtraKeys(true);
 
 	static {
 		HIDE_SCREENS.setPressCallback((action, key) -> {

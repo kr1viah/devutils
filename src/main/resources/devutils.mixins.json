@@ -8,6 +8,10 @@
     "defaultRequire": 1
   },
   "client": [
+    "FullbrightMixin",
     "ToggleScreenMixin"
-  ]
+  ],
+  "mixinextras": {
+    "minVersion": "0.5.4"
+  }
 }
