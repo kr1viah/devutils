@@ -6,36 +6,36 @@ plugins {
 version = "${property("mod.version")}+${sc.current.version}"
 base.archivesName = property("mod.id") as String
 
+//@formatter-off
 val requiredJava: JavaVersion = when {
-    sc.current.parsed >= "26.1" -> JavaVersion.VERSION_25
+    sc.current.parsed >= "26.1"   -> JavaVersion.VERSION_25
     sc.current.parsed >= "1.20.5" -> JavaVersion.VERSION_21
-    sc.current.parsed >= "1.18" -> JavaVersion.VERSION_17
-    sc.current.parsed >= "1.17" -> JavaVersion.VERSION_16
+    sc.current.parsed >= "1.18"   -> JavaVersion.VERSION_17
+    sc.current.parsed >= "1.17"   -> JavaVersion.VERSION_16
     else -> JavaVersion.VERSION_1_8
 }
 
 val mapi: String = project.property("deps.malilib_api") as String
 val malilibApiVersion: String = when {
-    sc.current.parsed >= "26.2" -> "$mapi-26.2"
-    sc.current.parsed >= "26.1" -> "$mapi-26.1"
-    sc.current.parsed >= "1.21.11" -> "$mapi-1.21.11"
+    sc.current.parsed >= "26.2"   -> "$mapi-26.2"
+    sc.current.parsed >= "26.1"   -> "$mapi-26.1"
+    sc.current.parsed >= "1.21.11"-> "$mapi-1.21.11"
     sc.current.parsed >= "1.21.9" -> "$mapi-1.21.10"
     sc.current.parsed >= "1.21.6" -> "$mapi-1.21.8"
     sc.current.parsed >= "1.21.2" -> "$mapi-1.21.5"
-    sc.current.parsed >= "1.21" -> "$mapi-1.21"
+    sc.current.parsed >= "1.21"   -> "$mapi-1.21"
     sc.current.parsed >= "1.20.6" -> "$mapi-1.20.6"
     sc.current.parsed >= "1.20.5" -> "$mapi-1.20.5"
     sc.current.parsed >= "1.20.3" -> "$mapi-1.20.4"
     sc.current.parsed >= "1.20.2" -> "$mapi-1.20.2"
-    sc.current.parsed >= "1.20" -> "$mapi-1.20.1"
-    sc.current.parsed >= "1.18" -> "$mapi-1.19.4"
-    sc.current.parsed >= "1.17" -> "$mapi-1.17.1"
-    sc.current.parsed >= "1.16" -> "$mapi-1.16.5"
-    sc.current.parsed >= "1.14" -> "$mapi-1.15.2"
+    sc.current.parsed >= "1.20"   -> "$mapi-1.20.1"
+    sc.current.parsed >= "1.18"   -> "$mapi-1.19.4"
+    sc.current.parsed >= "1.17"   -> "$mapi-1.17.1"
+    sc.current.parsed >= "1.16"   -> "$mapi-1.16.5"
+    sc.current.parsed >= "1.14"   -> "$mapi-1.15.2"
     else -> throw IllegalStateException()
 }
 
-//@formatter-off
 val malilibVersion: String = when {
     sc.current.parsed >= "26.2"   -> "26.2"    +":"+ "0.29.3"
     sc.current.parsed >= "26.1"   -> "26.1.2"  +":"+ "0.28.9"
@@ -79,17 +79,20 @@ repositories {
      * Restricts dependency search of the given [groups] to the [maven URL][url],
      * improving the setup speed.
      */
-    fun strictMaven(url: String, alias: String, vararg groups: String) = exclusiveContent {
-        forRepository { maven(url) { name = alias } }
-        filter { groups.forEach(::includeGroup) }
+    fun strictMaven(url: String, alias: String, vararg groups: String) {
+        val maven = maven(url) { name = alias }
+        if (groups.isNotEmpty()) {
+            exclusiveContent {
+                forRepository { maven }
+                filter { groups.forEach(::includeGroup) }
+            }
+        }
     }
 
-    strictMaven("https://www.cursemaven.com", "CurseForge", "curse.maven")
-    strictMaven("https://api.modrinth.com/maven", "Modrinth", "maven.modrinth")
-    strictMaven("https://repo.repsy.io/kr1v/maven", "kr1v", "net.kr1v")
-    maven("https://masa.dy.fi/maven/")
-    maven("https://masa.dy.fi/maven/sakura-ryoko/")
-    maven("https://maven.fallenbreath.me/releases/")
+    strictMaven("https://repo.repsy.io/kr1v/maven/", "kr1v", "net.kr1v")
+    strictMaven("https://maven.fallenbreath.me/releases/", "fallen breath", "me.fallenbreath")
+    strictMaven("https://masa.dy.fi/maven/", "masa")
+    strictMaven("https://masa.dy.fi/maven/sakura-ryoko/", "sakura")
 }
 
 dependencies {

@@ -1,11 +1,7 @@
-import com.google.gson.JsonArray
-import com.google.gson.JsonElement
-import com.google.gson.JsonObject
-import java.io.IOException
+import shadow.com.google.gson.Gson
+import shadow.com.google.gson.JsonObject
 import java.io.InputStreamReader
 import java.net.URI
-import java.nio.charset.StandardCharsets
-import java.util.stream.Collectors
 
 pluginManagement {
     repositories {
@@ -28,53 +24,22 @@ buildscript {
     repositories {
         mavenCentral()
     }
-
-    dependencies {
-        classpath("com.google.code.gson:gson:2.13.1")
-    }
 }
 
-object Versions {
-    val ALL_LIST: List<String>
+val metaUrl = "https://piston-meta.mojang.com/mc/game/version_manifest_v2.json"
 
-    init {
-        val metaUrl = "https://piston-meta.mojang.com/mc/game/version_manifest_v2.json"
-        val gson: com.google.gson.Gson = com.google.gson.Gson()
+val input = InputStreamReader(URI.create(metaUrl).toURL().openStream())
+val json = Gson().fromJson(input, JsonObject::class.java)!!
 
-        val url = URI.create(metaUrl)
-        val json: JsonObject
-
-        try {
-            InputStreamReader(
-                url.toURL().openStream(), StandardCharsets.UTF_8
-            ).use { reader ->
-                json = gson.fromJson(reader, JsonObject::class.java)
-            }
-        } catch (e: IOException) {
-            throw RuntimeException(e)
-        }
-
-        val versions: JsonArray = json.get("versions").getAsJsonArray()
-
-        val allVersionsStrings = versions.asList().stream()
-            .map { obj: JsonElement -> obj.getAsJsonObject() }
-            .filter { version: JsonObject -> version.get("type").asString == "release" }
-            .map { version: JsonObject -> version.get("id").asString }
-            .collect(Collectors.toList())
-            .reversed()
-
-        ALL_LIST = allVersionsStrings
-            .subList(/*55 <- includes 1.14-1.14.4*/ 59, allVersionsStrings.size)
-            .reversed()
-    }
-}
-
+val all = json.get("versions").asJsonArray
+    .map { it.asJsonObject }
+    .filter { it["type"].asString == "release" }
+    .map { it["id"].asString }
+    .dropLastWhile { it != "1.14.4" }
 
 stonecutter {
     create(rootProject) {
-        for (version in Versions.ALL_LIST) {
-            version(version)
-        }
+        all.forEach { version(it) }
         vcsVersion = "26.2"
     }
 }
